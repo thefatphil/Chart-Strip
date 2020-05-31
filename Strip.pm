@@ -1155,7 +1155,8 @@ sub draw_line {
     $thick += $shadow->{dw} if $shadow;
     $me->set_thickness( $thick ) if $thick;
 
-    my $shcolor = $shadow ? $me->img_color($shadow->{color} || $me->{shadow_color} ) : undef;
+    my $defcolor = $me->img_color($shadow ? $shadow->{color} || $me->{shadow_color}
+				  : $opts->{color});
 
     foreach my $s ( @$data ){
 	my $x = $s->{time};
@@ -1173,7 +1174,7 @@ sub draw_line {
         }
 
 	if( defined($y) || !$skipundef ){
-            my $color = $shadow ? $shcolor : $me->color($s, $opts);
+            my $color = ($shadow || !defined($s->{color})) ? $defcolor : $me->color($s, $opts);
 
             if( $me->{antialias} && $thick == 1 ){
                 # GD cannot antialias a thick line
